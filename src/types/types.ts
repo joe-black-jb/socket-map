@@ -10,6 +10,7 @@ export interface LatLng {
 }
 
 export interface Place {
+  ID: number;
   name: string;
   latitude: number;
   longitude: number;
@@ -21,4 +22,8 @@ export interface Place {
   socketNum: number;
   wifi: number;
   smoke: number;
+}
+
+export interface MarkerData extends LatLng {
+  id: number;
 }
