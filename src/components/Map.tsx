@@ -23,7 +23,7 @@ const containerStyle = {
 };
 
 const googleMapApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "";
-console.log("key: ", googleMapApiKey);
+// console.log("key: ", googleMapApiKey);
 
 // interface Props {
 //   markers: MarkerData[];

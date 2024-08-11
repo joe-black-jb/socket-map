@@ -27,3 +27,5 @@ export interface Place {
 export interface MarkerData extends LatLng {
   id: number;
 }
+
+export type AutocompleteMode = { id: string; label: string };
