@@ -29,3 +29,9 @@ export interface MarkerData extends LatLng {
 }
 
 export type AutocompleteMode = { id: string; label: string };
+
+export interface TabElement {
+  id: number;
+  label: string;
+  href?: string;
+}

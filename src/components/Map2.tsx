@@ -12,17 +12,15 @@ import { Autocomplete } from "@react-google-maps/api";
 import { MarkerWithInfoWindow } from "./MarkerWithInfoWindow";
 import ControlPanel, { AutocompleteMode } from "./ControlPanel";
 import { CustomMapControl } from "./CustomMapControl";
-
-const googleMapApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "";
-const googleMapId = process.env.REACT_APP_GOOGLE_MAPS_ID || "";
-console.log("googleMapId: ", googleMapId);
+import { googleMapApiKey, googleMapId } from "../api/config/config";
+import { ButtonArea } from "./ButtonArea";
 
 let mapCenter: LatLng = { lat: 35.702429846362676, lng: 139.98543747505366 };
 
 const Map2 = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-  const [center, setCenter] = useState<LatLng>(mapCenter);
+  const [center, setCenter] = useState<LatLng | null>(mapCenter);
 
   useEffect(() => {
     getPlaces();
@@ -86,27 +84,47 @@ const Map2 = () => {
   const [selectedPlace, setSelectedPlace] =
     useState<google.maps.places.PlaceResult | null>(null);
 
-  return (
-    <APIProvider apiKey={googleMapApiKey}>
-      <Map
-        mapId={googleMapId}
-        style={{ width: "100%", height: "800px" }}
-        defaultCenter={mapCenter}
-        defaultZoom={15}
-        gestureHandling={"greedy"}
-        // disableDefaultUI={true}
-      >
-        {places.map((place) => (
-          <MarkerWithInfoWindow key={place.ID} place={place} />
-        ))}
-      </Map>
+  const handleSelectPlace = (e: google.maps.places.PlaceResult | null) => {
+    const geo = e?.geometry;
+    const selectedLat = geo?.location?.lat();
+    const selectedLng = geo?.location?.lng();
+    if (selectedLat && selectedLng) {
+      setCenter({
+        lat: selectedLat,
+        lng: selectedLng,
+      });
+    }
+  };
 
-      <CustomMapControl
-        controlPosition={ControlPosition.TOP}
-        selectedAutocompleteMode={selectedAutocompleteMode}
-        onPlaceSelect={setSelectedPlace}
-      />
-    </APIProvider>
+  return (
+    <>
+      <APIProvider apiKey={googleMapApiKey}>
+        <Map
+          mapId={googleMapId}
+          style={{ width: "100%", height: "800px" }}
+          defaultCenter={mapCenter}
+          center={center}
+          onDragstart={() => {
+            setCenter(null);
+          }}
+          defaultZoom={15}
+          gestureHandling={"greedy"}
+          disableDefaultUI={true}
+        >
+          {places.map((place) => (
+            <MarkerWithInfoWindow key={place.ID} place={place} />
+          ))}
+        </Map>
+
+        <CustomMapControl
+          controlPosition={ControlPosition.TOP}
+          selectedAutocompleteMode={selectedAutocompleteMode}
+          // onPlaceSelect={setSelectedPlace}
+          onPlaceSelect={handleSelectPlace}
+        />
+      </APIProvider>
+      <ButtonArea />
+    </>
   );
 };
 
