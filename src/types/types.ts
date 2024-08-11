@@ -24,6 +24,13 @@ export interface Place {
   smoke: number;
 }
 
+export interface NewPlace {
+  name: string;
+  latitude: number;
+  longitude: number;
+  address?: string;
+}
+
 export interface MarkerData extends LatLng {
   id: number;
 }
@@ -35,3 +42,7 @@ export interface TabElement {
   label: string;
   href?: string;
 }
+
+export type ResultModalStatus = "OK" | "NG";
+
+export type WifiOption = "あり" | "なし" | "不明";

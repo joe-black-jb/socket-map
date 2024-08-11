@@ -8,10 +8,11 @@ import { LatLng, Place } from "../types/types";
 
 interface Props {
   place: Place;
+  isNewPlace?: boolean;
 }
 
 export const MarkerWithInfoWindow = (props: Props) => {
-  const { place } = props;
+  const { place, isNewPlace } = props;
   // `markerRef` and `marker` are needed to establish the connection between
   // the marker and infowindow (if you're using the Marker component, you
   // can use the `useMarkerRef` hook instead).

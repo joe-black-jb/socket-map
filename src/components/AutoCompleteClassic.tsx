@@ -31,9 +31,33 @@ export const PlaceAutocompleteClassic = ({ onPlaceSelect }: Props) => {
     });
   }, [onPlaceSelect, placeAutocomplete]);
 
+  const clearInput = () => {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
   return (
-    <div className="autocomplete-container">
-      <input ref={inputRef} className="h-10 p-4 mt-4 w-72 text-lg" />
+    <div className="autocomplete-container flex items-center justify-between relative">
+      <input
+        ref={inputRef}
+        className="h-10 p-4 mt-4 w-72 text-lg rounded-sm shadow-lg pr-10"
+      />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="absolute size-6 h-10 mt-4 items-center right-2 cursor-pointer text-gray-500"
+        onClick={clearInput}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M6 18 18 6M6 6l12 12"
+        />
+      </svg>
     </div>
   );
 };
