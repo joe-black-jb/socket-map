@@ -4,6 +4,7 @@ import {
   ControlPosition,
   InfoWindow,
   Map,
+  MapMouseEvent,
 } from "@vis.gl/react-google-maps";
 import React, { useEffect, useRef, useState } from "react";
 import { LatLng, MarkerData, Place } from "../types/types";
@@ -21,6 +22,8 @@ const Map2 = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
   const [center, setCenter] = useState<LatLng | null>(mapCenter);
+  const [activeMarkerId, setActiveMarkerId] = useState<number | null>(null);
+  const [activePlace, setActivePlace] = useState<LatLng | null>(null);
 
   useEffect(() => {
     getPlaces();
@@ -96,6 +99,38 @@ const Map2 = () => {
     }
   };
 
+  const handleClickMap = (e: MapMouseEvent) => {
+    console.log("handleClickMap: ", e);
+    const { detail } = e;
+    if (detail) {
+      const lat = detail.latLng?.lat;
+      const lng = detail.latLng?.lng;
+
+      if (lat && lng) {
+        // lat, lng から場所の名前を検索
+        const latLng = { lat, lng };
+        console.log("latLng: ", latLng);
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+          if (
+            status === google.maps.GeocoderStatus.OK &&
+            results &&
+            results[0]
+          ) {
+            // setPlaceName(results[0].formatted_address);
+            console.log("検索できました: ", results);
+            // setState
+            setActivePlace(latLng);
+          } else {
+            console.log("検索できませんでした");
+
+            // setPlaceName('Unknown location');
+          }
+        });
+      }
+    }
+  };
+
   return (
     <>
       <APIProvider apiKey={googleMapApiKey}>
@@ -107,6 +142,7 @@ const Map2 = () => {
           onDragstart={() => {
             setCenter(null);
           }}
+          onClick={handleClickMap}
           defaultZoom={15}
           gestureHandling={"greedy"}
           disableDefaultUI={true}
