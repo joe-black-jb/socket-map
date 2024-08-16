@@ -30,7 +30,7 @@ export const FreeMap = (props: Props) => {
 
   return (
     <div className="fixed top-32 w-full">
-      <MapContainer center={center} zoom={17} scrollWheelZoom={false}>
+      <MapContainer center={center} zoom={17} scrollWheelZoom={true}>
         <ChangeMapView center={center} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -45,6 +45,10 @@ export const FreeMap = (props: Props) => {
             <Popup>
               <div className="font-bold mb-2">{place.name}</div>
               <div>{place.address}</div>
+              <div className="flex mt-2">
+                <div>コンセント: {place.socketNum || "？"}</div>
+                <div className="ml-2">Wifi: {place.wifi || "？"}</div>
+              </div>
             </Popup>
           </Marker>
         ))}
