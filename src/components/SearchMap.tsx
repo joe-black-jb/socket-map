@@ -38,91 +38,6 @@ let mapCenter: LatLng = { lat: 35.702429846362676, lng: 139.98543747505366 };
 
 const wifiOptions: WifiOption[] = ["あり", "なし", "不明"];
 
-// Map のスタイル変更
-// const mapConfig: google.maps.MapTypeStyle[] = [
-//   {
-//     featureType: "all",
-//     elementType: "labels",
-//     stylers: [{ visibility: "off" }],
-//   },
-// ];
-
-export type MapConfig = {
-  id: string;
-  label: string;
-  mapId?: string;
-  mapTypeId?: string;
-  styles?: google.maps.MapTypeStyle[];
-};
-const MapTypeId = {
-  HYBRID: "hybrid",
-  ROADMAP: "roadmap",
-  SATELLITE: "satellite",
-  TERRAIN: "terrain",
-};
-const brightColorsStyles: google.maps.MapTypeStyle[] = [
-  {
-    featureType: "all",
-    elementType: "all",
-    stylers: [
-      { saturation: "32" },
-      { lightness: "-3" },
-      { visibility: "off" },
-      { weight: "1.18" },
-    ],
-  },
-  {
-    featureType: "administrative",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "landscape",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "landscape.man_made",
-    elementType: "all",
-    stylers: [{ saturation: "-70" }, { lightness: "14" }],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "road",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "transit",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "water",
-    elementType: "all",
-    stylers: [{ saturation: "100" }, { lightness: "-14" }],
-  },
-  {
-    featureType: "water",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }, { lightness: "12" }],
-  },
-];
-const mapConfigs: MapConfig[] = [
-  {
-    id: googleMapId,
-    label: 'Raster / "Bright Colors" (no mapId)',
-    mapTypeId: MapTypeId.ROADMAP,
-    styles: brightColorsStyles,
-  },
-];
-
-console.log("mapConfigs[0].styles: ", mapConfigs[0].styles);
-
 const SearchMap = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
@@ -149,7 +64,6 @@ const SearchMap = () => {
       .get("/places")
       .then((result) => {
         const places: Place[] = result?.data?.data;
-        console.log("places: ", places);
         setPlaces(places);
         const markerArray: MarkerData[] = [];
         if (places.length) {
@@ -173,9 +87,6 @@ const SearchMap = () => {
   if (name && address) {
     isSetPlace = true;
   }
-  console.log("name: ", name);
-  console.log("address: ", address);
-  console.log("isSetPlace: ", isSetPlace);
 
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
@@ -211,14 +122,32 @@ const SearchMap = () => {
     useState<google.maps.places.PlaceResult | null>(null);
 
   const handleSelectPlace = (e: google.maps.places.PlaceResult | null) => {
-    console.log("検索結果: ", e);
-
     const geo = e?.geometry;
     const selectedLat = geo?.location?.lat();
     const selectedLng = geo?.location?.lng();
-    if (selectedLat && selectedLng) {
-      console.log("セットします❗️");
+    console.log(`=== handleSelectPlace ===`);
+    console.log(`「${e?.name}」(ID: ${e?.place_id})`);
+    console.log(`${selectedLat}, ${selectedLng}`);
 
+    /*
+    ケンタッキー（検索）
+    35.70017230000001, 139.9863074
+
+    handleClickMap（マップ上をクリック）
+    35.700174213496275, 139.98629495501518
+
+    GoogleMapアプリ
+    35.700302962861265, 139.98626448046866
+
+    詳細API > location
+    35.7001723, 139.9863074
+
+    place_id
+    ・ChIJj_93a9x_GGARjyw_Q5afaok (詳細APIのレスポンス)
+    
+    */
+
+    if (selectedLat && selectedLng) {
       setCenter({
         lat: selectedLat,
         lng: selectedLng,
@@ -237,7 +166,13 @@ const SearchMap = () => {
     console.log("handleClickMap: ", e);
     const { detail } = e;
     if (detail.placeId) {
-      const fields = ["id", "displayName", "formatted_address", "types"];
+      const fields = [
+        "id",
+        "displayName",
+        "formatted_address",
+        "types",
+        "location",
+      ];
       const result = await getPlaceDetail(detail.placeId, fields);
       console.log("API取得結果⭐️: ", result);
       const placeName = result?.displayName?.text;
@@ -252,9 +187,6 @@ const SearchMap = () => {
   };
 
   const handleClickRegister = () => {
-    console.log("登録ボタンをクリック");
-
-    // setModalShow(true);
     setConfirmModalShow(true);
   };
 
@@ -280,11 +212,6 @@ const SearchMap = () => {
   const handleChangeSocketNum = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSocketNum(Number(e?.target?.value));
   };
-  // // const handleChangeWifi = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log("wifiオプション変更: ", e);
-
-  //   // setWifi(e);
-  // };
   const handleChangeWifi = (wifiOption: WifiOption) => {
     setWifi(wifiOption);
   };

@@ -60,7 +60,6 @@ const Map2 = () => {
       .get("/places")
       .then((result) => {
         const places: Place[] = result?.data?.data;
-        console.log("places: ", places);
         setPlaces(places);
         const markerArray: MarkerData[] = [];
         if (places.length) {
@@ -84,9 +83,6 @@ const Map2 = () => {
   if (name && address) {
     isSetPlace = true;
   }
-  console.log("name: ", name);
-  console.log("address: ", address);
-  console.log("isSetPlace: ", isSetPlace);
 
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
@@ -128,8 +124,6 @@ const Map2 = () => {
     const selectedLat = geo?.location?.lat();
     const selectedLng = geo?.location?.lng();
     if (selectedLat && selectedLng) {
-      console.log("セットします❗️");
-
       setCenter({
         lat: selectedLat,
         lng: selectedLng,
@@ -164,8 +158,6 @@ const Map2 = () => {
 
   const handleClickRegister = () => {
     console.log("登録ボタンをクリック");
-
-    // setModalShow(true);
     setConfirmModalShow(true);
   };
 
@@ -182,20 +174,19 @@ const Map2 = () => {
   const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e?.target?.value);
   };
+
   const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress(e?.target?.value);
   };
+
   const handleChangeSocketOptions = (socketOption: WifiOption) => {
     setSocket(socketOption);
   };
+
   const handleChangeSocketNum = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSocketNum(Number(e?.target?.value));
   };
-  // // const handleChangeWifi = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log("wifiオプション変更: ", e);
 
-  //   // setWifi(e);
-  // };
   const handleChangeWifi = (wifiOption: WifiOption) => {
     setWifi(wifiOption);
   };
