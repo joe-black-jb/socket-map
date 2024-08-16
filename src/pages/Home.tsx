@@ -24,9 +24,8 @@ const tabs: TabElement[] = [
   },
 ];
 
-const defaultCenter: LatLngExpression = [
-  35.702429846362676, 139.98543747505366,
-];
+// 東京駅
+const defaultCenter: LatLngExpression = [35.68159350438924, 139.767199901854];
 
 const Home = () => {
   const [center, setCenter] = useState<LatLngExpression>(defaultCenter);
@@ -42,7 +41,20 @@ const Home = () => {
   useEffect(() => {
     fetchPlaces();
     fetchStations();
+    getCurrentLocation();
   }, []);
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCenter(userLocation);
+      });
+    }
+  };
 
   const handleClickTab = (
     e: React.MouseEvent<HTMLElement>,
