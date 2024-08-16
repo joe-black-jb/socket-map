@@ -7,6 +7,7 @@ interface Props {
   label?: string;
   options: string[];
   desc?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const SelectField = (props: Props) => {
@@ -29,7 +30,9 @@ export const SelectField = (props: Props) => {
             )}
           >
             {options.map((option) => (
-              <option value={option}>{option}</option>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
           </Select>
           <ChevronDownIcon

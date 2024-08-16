@@ -21,7 +21,11 @@ import { Autocomplete } from "@react-google-maps/api";
 import { MarkerWithInfoWindow } from "./MarkerWithInfoWindow";
 import ControlPanel, { AutocompleteMode } from "./ControlPanel";
 import { CustomMapControl } from "./CustomMapControl";
-import { googleMapApiKey, googleMapId } from "../api/config/config";
+import {
+  googleMapApiKey,
+  googleMapId,
+  googleMapSubId,
+} from "../api/config/config";
 import { ButtonArea } from "./ButtonArea";
 import { Feature, Point } from "geojson";
 import Modal from "./Modal";
@@ -34,7 +38,92 @@ let mapCenter: LatLng = { lat: 35.702429846362676, lng: 139.98543747505366 };
 
 const wifiOptions: WifiOption[] = ["あり", "なし", "不明"];
 
-const Map2 = () => {
+// Map のスタイル変更
+// const mapConfig: google.maps.MapTypeStyle[] = [
+//   {
+//     featureType: "all",
+//     elementType: "labels",
+//     stylers: [{ visibility: "off" }],
+//   },
+// ];
+
+export type MapConfig = {
+  id: string;
+  label: string;
+  mapId?: string;
+  mapTypeId?: string;
+  styles?: google.maps.MapTypeStyle[];
+};
+const MapTypeId = {
+  HYBRID: "hybrid",
+  ROADMAP: "roadmap",
+  SATELLITE: "satellite",
+  TERRAIN: "terrain",
+};
+const brightColorsStyles: google.maps.MapTypeStyle[] = [
+  {
+    featureType: "all",
+    elementType: "all",
+    stylers: [
+      { saturation: "32" },
+      { lightness: "-3" },
+      { visibility: "off" },
+      { weight: "1.18" },
+    ],
+  },
+  {
+    featureType: "administrative",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "landscape",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "all",
+    stylers: [{ saturation: "-70" }, { lightness: "14" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "road",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "water",
+    elementType: "all",
+    stylers: [{ saturation: "100" }, { lightness: "-14" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }, { lightness: "12" }],
+  },
+];
+const mapConfigs: MapConfig[] = [
+  {
+    id: googleMapId,
+    label: 'Raster / "Bright Colors" (no mapId)',
+    mapTypeId: MapTypeId.ROADMAP,
+    styles: brightColorsStyles,
+  },
+];
+
+console.log("mapConfigs[0].styles: ", mapConfigs[0].styles);
+
+const SearchMap = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
   const [searchedPlace, setSearchedPlace] =
@@ -209,7 +298,7 @@ const Map2 = () => {
       {/* <Tabs /> */}
       <APIProvider apiKey={googleMapApiKey} language="ja">
         <Map
-          mapId={googleMapId}
+          mapId={googleMapSubId}
           style={{ width: "100%", height: "800px" }}
           defaultCenter={mapCenter}
           center={center}
@@ -322,4 +411,4 @@ const Map2 = () => {
   );
 };
 
-export default Map2;
+export default SearchMap;

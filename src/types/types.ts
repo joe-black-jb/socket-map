@@ -39,6 +39,7 @@ export type AutocompleteMode = { id: string; label: string };
 
 export interface TabElement {
   id: number;
+  code: string;
   label: string;
   href?: string;
 }
@@ -46,3 +47,13 @@ export interface TabElement {
 export type ResultModalStatus = "OK" | "NG";
 
 export type WifiOption = "あり" | "なし" | "不明";
+
+export interface DisplayName {
+  languageCode: string;
+  text: string;
+}
+export interface PlaceDetailResponse {
+  displayName: DisplayName;
+  formattedAddress: string;
+  id: string;
+}
