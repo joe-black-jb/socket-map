@@ -3,7 +3,7 @@ import { config } from "./config/config";
 
 const env = process.env.NODE_ENV || "development";
 
-let baseUrl = "";
+let baseUrl = "http://localhost:8080";
 if (env === "development") {
   baseUrl = config.dev.apiBaseUrl;
   // axios.defaults.headers["Access-Control-Allow-Origin"] = "*";

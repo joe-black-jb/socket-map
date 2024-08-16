@@ -1,6 +1,11 @@
-import { PlaceDetailResponse } from "../types/types";
+import { Place, PlaceDetailResponse, Station } from "../types/types";
 import api from "./axiosConfig";
 import { googleMapApiKey } from "./config/config";
+
+export const getPlaces = async (): Promise<Place[]> => {
+  const res = await api.get(`/places`);
+  return res.data;
+};
 
 export const getPlaceDetail = async (
   placeId: string,
@@ -14,4 +19,18 @@ export const getPlaceDetail = async (
     return res.data;
   }
   return undefined;
+};
+
+export const searchPlace = async (placeStr: string): Promise<Station[]> => {
+  // const url = `https://nominatim.openstreetmap.org/search?q=${placeStr}`;
+  const url = `/search?q=${placeStr}`;
+  const res = await api.get(url);
+  console.log("API検索結果: ", res);
+  return res.data;
+};
+
+export const getStations = async (): Promise<Station[]> => {
+  const url = `/stations`;
+  const res = await api.get(url);
+  return res.data;
 };

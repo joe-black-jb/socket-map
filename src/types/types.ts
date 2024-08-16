@@ -12,6 +12,7 @@ export interface LatLng {
 export interface Place {
   ID: number;
   name: string;
+  address: string;
   latitude: number;
   longitude: number;
   image: string;
@@ -29,6 +30,13 @@ export interface NewPlace {
   latitude: number;
   longitude: number;
   address?: string;
+}
+
+export interface Station {
+  ID: number;
+  name: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface MarkerData extends LatLng {
