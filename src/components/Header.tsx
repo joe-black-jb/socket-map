@@ -38,7 +38,7 @@ export default function Header(props: Props) {
   };
 
   return (
-    <header className="bg-white">
+    <header className="bg-white absolute top-2 left-2 z-40">
       {confirmModalShow && (
         <ConfirmModal
           isOpen={true}
@@ -52,10 +52,11 @@ export default function Header(props: Props) {
         />
       )}
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between"
         aria-label="Global"
       >
-        <div className="flex lg:flex-1">
+        {/* アプリアイコン */}
+        {/* <div className="flex lg:flex-1">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <svg
@@ -73,18 +74,22 @@ export default function Header(props: Props) {
               />
             </svg>
           </a>
-        </div>
-        <div className="flex lg:hidden">
+        </div> */}
+        <div className="flex">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2 text-gray-700"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            {/* <Bars3Icon className="h-6 w-6" aria-hidden="true" /> */}
+            <Bars3Icon
+              className="rounded-full hover:bg-gray-200 p-1 size-8 top-2 right-2 items-center cursor-pointer text-gray-500"
+              aria-hidden="true"
+            />
           </button>
         </div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+        <PopoverGroup className="hidden">
           {!isLoggedIn && (
             <>
               <a
@@ -114,12 +119,12 @@ export default function Header(props: Props) {
         </PopoverGroup>
       </nav>
       <Dialog
-        className="lg:hidden"
+        className="z-70"
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
       >
-        <div className="fixed inset-0 z-10" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <div className="fixed inset-0 z-70" />
+        <DialogPanel className="fixed inset-y-0 left-0 z-70 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
