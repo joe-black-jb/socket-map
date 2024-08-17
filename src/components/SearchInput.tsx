@@ -24,9 +24,11 @@ export const SearchInput = (props: Props) => {
           {/* <Header /> */}
           <Header2 />
           <Input
-            className={`relative w-full h-12 justify-self-center pl-14 py-2 rounded-full autofill:shadow-[inset_0_0_0px_1000px_white] ${
-              suggestions.length > 0 && "shadow-lg"
-            } focus:outline-none focus:bg-white`}
+            className={`relative w-full h-12 justify-self-center pl-14 py-2 autofill:shadow-[inset_0_0_0px_1000px_white] focus:outline-none focus:bg-white ${
+              suggestions.length === 0
+                ? "shadow-lg rounded-full"
+                : "rounded-t-2xl"
+            }`}
             placeholder="Search here"
             onChange={onChange}
             value={value}
@@ -67,22 +69,17 @@ export const SearchInput = (props: Props) => {
       </div>
       {suggestions.length > 0 && (
         <div
-          className={`flex justify-center mx-auto w-full h-96 overflow-auto mt-2 ${
+          className={`mx-auto w-2/3 md:w-96 h-96 overflow-auto mt-2 rounded-b-2xl ${
             suggestions.length > 0 && "z-50"
           }`}
         >
-          <div>
+          <div className="rounded-b-xl">
             {suggestions?.map((suggestion, index) => (
-              <div
-                key={suggestion.ID}
-                className="w-2/3 md:w-96 px-1 rounded-lg"
-              >
+              <div key={suggestion.ID} className="rounded-lg">
                 <button
-                  className={`bg-white text-left shadow-lg w-full p-4 hover:bg-gray-100 ${
-                    index === suggestions.length - 1
-                      ? "rounded-b-lg"
-                      : "border-b"
-                  } ${index === 0 && "rounded-t-lg"}`}
+                  className={`bg-white text-left shadow-lg w-full pl-14 py-4 hover:bg-gray-100 border-t ${
+                    index === suggestions.length - 1 && "rounded-b-2xl"
+                  }`}
                   onClick={() => onClickSuggestion(suggestion)}
                 >
                   {suggestion.name}
