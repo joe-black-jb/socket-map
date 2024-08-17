@@ -8,6 +8,8 @@ import api from "../api/axiosConfig";
 import { SearchInput } from "../components/SearchInput";
 import { getPlaces, getStations, searchPlace } from "../api/apis";
 import { LatLngExpression } from "leaflet";
+import Header from "../components/Header";
+import { ZoomControl } from "react-leaflet";
 
 const tabs: TabElement[] = [
   {
@@ -107,7 +109,7 @@ const Home = () => {
   // console.log("center: ", center);
 
   return (
-    <>
+    <div className="h-full relative flex justify-center">
       {/* <Tabs
         tabs={tabs}
         selectedTab={selectedTab}
@@ -115,6 +117,7 @@ const Home = () => {
       /> */}
       {/* {isSearchTab ? <Map2 /> : <SearchMap />} */}
       {/* <SearchMap /> */}
+      {/* <Header /> */}
       <SearchInput
         value={placeStr}
         suggestions={filteredStations}
@@ -124,7 +127,7 @@ const Home = () => {
         onClickSuggestion={onClickSuggestion}
       />
       <FreeMap center={center} places={places} />
-    </>
+    </div>
   );
 };
 

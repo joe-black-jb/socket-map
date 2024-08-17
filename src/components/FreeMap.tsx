@@ -1,4 +1,11 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  ZoomControl,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Place } from "../types/types";
 import L, { LatLngExpression } from "leaflet";
@@ -29,8 +36,14 @@ export const FreeMap = (props: Props) => {
   };
 
   return (
-    <div className="fixed top-32 w-full">
-      <MapContainer center={center} zoom={17} scrollWheelZoom={true}>
+    <div className="fixed top-0 h-full w-full">
+      <MapContainer
+        center={center}
+        zoom={17}
+        scrollWheelZoom={true}
+        zoomControl={false}
+      >
+        <ZoomControl position="bottomright" />
         <ChangeMapView center={center} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
