@@ -1,5 +1,7 @@
 import { Input } from "@headlessui/react";
 import { Station } from "../types/types";
+import Header from "./Header";
+import Header2 from "./Header2";
 
 interface Props {
   value: string;
@@ -15,11 +17,16 @@ export const SearchInput = (props: Props) => {
     props;
 
   return (
-    <div className={`absolute w-full ${suggestions.length > 0 && "z-30"}`}>
+    // <div className={`absolute w-full ${suggestions.length > 0 && "z-30"}`}>
+    <div className={`absolute mt-4 w-full h-10 z-50 top-0`}>
       <div className="flex justify-center">
-        <div className="relative">
+        <div className="relative w-2/3 md:w-96 h-10 z-50">
+          {/* <Header /> */}
+          <Header2 />
           <Input
-            className="w-96 relative justify-self-center pl-4 py-2 rounded-full border-2 border-gray-400 focus:outline-none"
+            className={`relative w-full h-12 justify-self-center pl-14 py-2 rounded-full autofill:shadow-[inset_0_0_0px_1000px_white] ${
+              suggestions.length > 0 && "shadow-lg"
+            } focus:outline-none focus:bg-white`}
             placeholder="Search here"
             onChange={onChange}
             value={value}
@@ -58,20 +65,33 @@ export const SearchInput = (props: Props) => {
           </svg>
         </div>
       </div>
-      <div className={"mx-auto w-96 h-96 overflow-auto"}>
-        {suggestions?.map((suggestion, index) => (
-          <div key={suggestion.ID} className="flex justify-center rounded-lg">
-            <button
-              className={`bg-white text-left shadow-lg w-96 p-4 hover:bg-gray-100 ${
-                index === suggestions.length - 1 ? "rounded-b-lg" : "border-b"
-              } ${index === 0 && "rounded-t-lg"}`}
-              onClick={() => onClickSuggestion(suggestion)}
-            >
-              {suggestion.name}
-            </button>
+      {suggestions.length > 0 && (
+        <div
+          className={`flex justify-center mx-auto w-full h-96 overflow-auto mt-2 ${
+            suggestions.length > 0 && "z-50"
+          }`}
+        >
+          <div>
+            {suggestions?.map((suggestion, index) => (
+              <div
+                key={suggestion.ID}
+                className="w-2/3 md:w-96 px-1 rounded-lg"
+              >
+                <button
+                  className={`bg-white text-left shadow-lg w-full p-4 hover:bg-gray-100 ${
+                    index === suggestions.length - 1
+                      ? "rounded-b-lg"
+                      : "border-b"
+                  } ${index === 0 && "rounded-t-lg"}`}
+                  onClick={() => onClickSuggestion(suggestion)}
+                >
+                  {suggestion.name}
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
