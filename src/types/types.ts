@@ -10,7 +10,7 @@ export interface LatLng {
 }
 
 export interface Place {
-  ID: number;
+  id: string;
   name: string;
   address: string;
   latitude: number;
@@ -33,7 +33,7 @@ export interface NewPlace {
 }
 
 export interface Station {
-  id: number;
+  id: string;
   name: string;
   latitude: number;
   longitude: number;

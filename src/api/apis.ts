@@ -3,7 +3,9 @@ import api from "./axiosConfig";
 import { googleMapApiKey } from "./config/config";
 
 export const getPlaces = async (): Promise<Place[]> => {
-  const res = await api.get(`/places`);
+  const res = await api.get(
+    `https://ld1joy777f.execute-api.ap-northeast-1.amazonaws.com/places`
+  );
   return res.data;
 };
 
