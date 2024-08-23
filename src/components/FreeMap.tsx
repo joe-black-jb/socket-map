@@ -52,7 +52,7 @@ export const FreeMap = (props: Props) => {
         {places.map((place) => (
           <Marker
             icon={getIcon()}
-            key={place.ID}
+            key={place.id}
             position={[place.latitude, place.longitude]}
           >
             <Popup>
