@@ -30,7 +30,7 @@ export const searchPlace = async (placeStr: string): Promise<Station[]> => {
 };
 
 export const getStations = async (): Promise<Station[]> => {
-  const url = `/stations`;
+  const url = `https://ld1joy777f.execute-api.ap-northeast-1.amazonaws.com/stations`;
   const res = await api.get(url);
   return res.data;
 };

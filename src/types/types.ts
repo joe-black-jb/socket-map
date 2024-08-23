@@ -33,7 +33,7 @@ export interface NewPlace {
 }
 
 export interface Station {
-  ID: number;
+  id: number;
   name: string;
   latitude: number;
   longitude: number;

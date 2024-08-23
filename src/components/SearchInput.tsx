@@ -75,7 +75,7 @@ export const SearchInput = (props: Props) => {
         >
           <div className="rounded-b-xl">
             {suggestions?.map((suggestion, index) => (
-              <div key={suggestion.ID} className="rounded-lg">
+              <div key={suggestion.id} className="rounded-lg">
                 <button
                   className={`bg-white text-left shadow-lg w-full pl-14 py-4 hover:bg-gray-100 border-t ${
                     index === suggestions.length - 1 && "rounded-b-2xl"
