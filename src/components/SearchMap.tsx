@@ -69,7 +69,7 @@ const SearchMap = () => {
         if (places.length) {
           places.forEach((place) => {
             const markerData: MarkerData = {
-              id: place.ID,
+              id: place.id,
               lat: place.latitude,
               lng: place.longitude,
             };
@@ -238,7 +238,7 @@ const SearchMap = () => {
           disableDefaultUI={true}
         >
           {places.map((place) => (
-            <MarkerWithInfoWindow key={place.ID} place={place} />
+            <MarkerWithInfoWindow key={place.id} place={place} />
           ))}
           {searchedPlace &&
             searchedPlace.geometry?.location?.lat() &&

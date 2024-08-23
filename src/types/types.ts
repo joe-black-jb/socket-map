@@ -40,7 +40,7 @@ export interface Station {
 }
 
 export interface MarkerData extends LatLng {
-  id: number;
+  id: string;
 }
 
 export type AutocompleteMode = { id: string; label: string };

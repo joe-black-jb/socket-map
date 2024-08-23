@@ -49,7 +49,7 @@ export default function Map() {
         if (places.length) {
           places.forEach((place) => {
             const markerData: MarkerData = {
-              id: place.ID,
+              id: place.id,
               lat: place.latitude,
               lng: place.longitude,
             };
@@ -65,7 +65,7 @@ export default function Map() {
   // const { markers, places } = props;
   console.log("markers: ", markers);
 
-  const [activeMarkerId, setActiveMarkerId] = useState<number | null>(null);
+  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
   const [activePlace, setActivePlace] = useState<LatLng | null>(null);
 
   /*
@@ -107,7 +107,7 @@ export default function Map() {
     }
   };
 
-  const handleClickMarker = (markerId: number) => {
+  const handleClickMarker = (markerId: string) => {
     setActiveMarkerId(markerId);
   };
 
@@ -193,13 +193,13 @@ export default function Map() {
         </Autocomplete>
         {places?.map((place) => (
           <Marker
-            key={place?.ID?.toString()}
-            onClick={() => handleClickMarker(place?.ID)}
+            key={place?.id?.toString()}
+            onClick={() => handleClickMarker(place?.id)}
             position={{ lat: place.latitude, lng: place.longitude }}
           >
-            {activeMarkerId === place.ID && (
+            {activeMarkerId === place.id && (
               <InfoWindow
-                key={place?.ID?.toString()}
+                key={place?.id?.toString()}
                 onCloseClick={handleCloseInfoWindow}
                 position={{ lat: place.latitude, lng: place.longitude }}
               >
