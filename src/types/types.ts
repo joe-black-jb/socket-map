@@ -20,6 +20,7 @@ export interface Place {
   tel: string;
   url: string;
   memo: string;
+  socket: number;
   socketNum: number;
   wifi: number;
   smoke: number;
