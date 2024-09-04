@@ -11,6 +11,9 @@ import { Place } from "../types/types";
 import L, { LatLngExpression } from "leaflet";
 import { useEffect } from "react";
 import { Icon } from "semantic-ui-react";
+import { siSimpleicons } from "simple-icons";
+import { siCoffeescript, siMcdonalds, siStarbucks } from "simple-icons";
+import { renderToStaticMarkup } from "react-dom/server";
 
 interface Props {
   center: LatLngExpression;
@@ -30,7 +33,33 @@ const ChangeMapView = ({ center }: { center: LatLngExpression }) => {
 export const FreeMap = (props: Props) => {
   const { center, places } = props;
 
-  const getIcon = (): L.Icon => {
+  const getIcon = (shopName: string): L.Icon | L.DivIcon => {
+    if (shopName.indexOf("マクドナルド") > -1) {
+      return new L.DivIcon({
+        html: siMcdonalds.svg,
+        iconSize: [30, 30],
+        iconAnchor: [15, 0],
+        className: "mcdonalds-marker-icon",
+      });
+    } else if (shopName.indexOf("スターバックス") > -1) {
+      return new L.DivIcon({
+        html: siStarbucks.svg,
+        iconSize: [30, 30],
+        iconAnchor: [15, 0],
+        className: "starbucks-marker-icon",
+      });
+    } else if (
+      shopName.indexOf("コーヒー") > -1 ||
+      shopName.indexOf("珈琲") > -1 ||
+      shopName.indexOf("カフェ") > -1
+    ) {
+      return new L.DivIcon({
+        html: siCoffeescript.svg,
+        iconSize: [30, 30],
+        iconAnchor: [15, 0],
+        className: "coffee-marker-icon",
+      });
+    }
     return L.icon({
       iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
     });
@@ -52,7 +81,8 @@ export const FreeMap = (props: Props) => {
         />
         {places.map((place) => (
           <Marker
-            icon={getIcon()}
+            icon={getIcon(place.name)}
+            // icon={getIcon()}
             key={place.id}
             position={[place.latitude, place.longitude]}
           >

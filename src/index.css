@@ -23,6 +23,27 @@ code {
   top: 0;
 } */
 
+.mcdonalds-marker-icon {
+  background-color: yellow; /* 背景色を透明に */
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.starbucks-marker-icon {
+  background-color: white; /* 背景色を透明に */
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.coffee-marker-icon {
+  background-color: white; /* 背景色を透明に */
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
