@@ -35,8 +35,17 @@ export const FreeMap = (props: Props) => {
 
   const getIcon = (shopName: string): L.Icon | L.DivIcon => {
     if (shopName.indexOf("マクドナルド") > -1) {
+      const mcdonaldsIconHtml = renderToStaticMarkup(
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#FFC72C"
+        >
+          <path d={siMcdonalds.path} />
+        </svg>
+      );
       return new L.DivIcon({
-        html: siMcdonalds.svg,
+        html: mcdonaldsIconHtml,
         iconSize: [30, 30],
         iconAnchor: [15, 0],
         className: "mcdonalds-marker-icon",
@@ -53,8 +62,14 @@ export const FreeMap = (props: Props) => {
       shopName.indexOf("珈琲") > -1 ||
       shopName.indexOf("カフェ") > -1
     ) {
+      const coffeeIconHtml = renderToStaticMarkup(
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d={siCoffeescript.path} />
+        </svg>
+      );
       return new L.DivIcon({
-        html: siCoffeescript.svg,
+        // html: siCoffeescript.svg,
+        html: coffeeIconHtml,
         iconSize: [30, 30],
         iconAnchor: [15, 0],
         className: "coffee-marker-icon",

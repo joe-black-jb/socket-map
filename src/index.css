@@ -24,24 +24,24 @@ code {
 } */
 
 .mcdonalds-marker-icon {
-  background-color: yellow; /* 背景色を透明に */
+  background-color: #da291c;
   border: none;
   border-radius: 50%;
-  padding: 4px;
+  padding: 6px;
 }
 
 .starbucks-marker-icon {
-  background-color: white; /* 背景色を透明に */
+  background-color: white;
   border: none;
   border-radius: 50%;
   padding: 4px;
 }
 
 .coffee-marker-icon {
-  background-color: white; /* 背景色を透明に */
+  background-color: white;
   border: none;
   border-radius: 50%;
-  padding: 4px;
+  padding: 5px;
 }
 
 @tailwind base;
