@@ -11,7 +11,6 @@ import { Place } from "../types/types";
 import L, { LatLngExpression } from "leaflet";
 import { useEffect } from "react";
 import { Icon } from "semantic-ui-react";
-import { siSimpleicons } from "simple-icons";
 import { siCoffeescript, siMcdonalds, siStarbucks } from "simple-icons";
 import { renderToStaticMarkup } from "react-dom/server";
 
@@ -46,14 +45,23 @@ export const FreeMap = (props: Props) => {
       );
       return new L.DivIcon({
         html: mcdonaldsIconHtml,
-        iconSize: [30, 30],
+        iconSize: [35, 35],
         iconAnchor: [15, 0],
         className: "mcdonalds-marker-icon",
       });
     } else if (shopName.indexOf("スターバックス") > -1) {
+      const starbucksIconHtml = renderToStaticMarkup(
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#00704a"
+        >
+          <path d={siStarbucks.path} />
+        </svg>
+      );
       return new L.DivIcon({
-        html: siStarbucks.svg,
-        iconSize: [30, 30],
+        html: starbucksIconHtml,
+        iconSize: [35, 35],
         iconAnchor: [15, 0],
         className: "starbucks-marker-icon",
       });
@@ -70,7 +78,7 @@ export const FreeMap = (props: Props) => {
       return new L.DivIcon({
         // html: siCoffeescript.svg,
         html: coffeeIconHtml,
-        iconSize: [30, 30],
+        iconSize: [35, 35],
         iconAnchor: [15, 0],
         className: "coffee-marker-icon",
       });
