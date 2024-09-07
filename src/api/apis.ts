@@ -3,9 +3,7 @@ import api from "./axiosConfig";
 import { googleMapApiKey } from "./config/config";
 
 export const getPlaces = async (): Promise<Place[]> => {
-  const res = await api.get(
-    `https://ld1joy777f.execute-api.ap-northeast-1.amazonaws.com/places`
-  );
+  const res = await api.get(`${process.env.API_BASE_URL}/places`);
   return res.data;
 };
 
@@ -32,7 +30,7 @@ export const searchPlace = async (placeStr: string): Promise<Station[]> => {
 };
 
 export const getStations = async (): Promise<Station[]> => {
-  const url = `https://ld1joy777f.execute-api.ap-northeast-1.amazonaws.com/stations`;
+  const url = `${process.env.API_BASE_URL}/stations`;
   const res = await api.get(url);
   return res.data;
 };
