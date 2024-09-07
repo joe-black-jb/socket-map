@@ -3,7 +3,7 @@ import api from "./axiosConfig";
 import { googleMapApiKey } from "./config/config";
 
 export const getPlaces = async (): Promise<Place[]> => {
-  const res = await api.get(`${process.env.API_BASE_URL}/places`);
+  const res = await api.get(`/places`);
   return res.data;
 };
 
@@ -30,7 +30,7 @@ export const searchPlace = async (placeStr: string): Promise<Station[]> => {
 };
 
 export const getStations = async (): Promise<Station[]> => {
-  const url = `${process.env.API_BASE_URL}/stations`;
+  const url = `/stations`;
   const res = await api.get(url);
   return res.data;
 };
