@@ -41,8 +41,8 @@ const Home = () => {
   const isSearchTab = selectedTab.code === "search";
 
   useEffect(() => {
-    fetchPlaces();
-    fetchStations();
+    fetchPlaces("places.json");
+    fetchStations("stations.json");
     getCurrentLocation();
   }, []);
 
@@ -66,13 +66,13 @@ const Home = () => {
     setSelectedTab(tab);
   };
 
-  const fetchPlaces = async () => {
-    const places = await getPlaces();
+  const fetchPlaces = async (key?: string) => {
+    const places = await getPlaces(key);
     setPlaces(places);
   };
 
-  const fetchStations = async () => {
-    const stations = await getStations();
+  const fetchStations = async (key?: string) => {
+    const stations = await getStations(key);
     setStations(stations);
   };
 

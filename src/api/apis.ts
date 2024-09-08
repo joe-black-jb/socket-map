@@ -2,8 +2,12 @@ import { Place, PlaceDetailResponse, Station } from "../types/types";
 import api from "./axiosConfig";
 import { googleMapApiKey } from "./config/config";
 
-export const getPlaces = async (): Promise<Place[]> => {
-  const res = await api.get(`/places`);
+export const getPlaces = async (key?: string): Promise<Place[]> => {
+  const res = await api.get(`/public/places`, {
+    params: {
+      key,
+    },
+  });
   return res.data;
 };
 
@@ -29,8 +33,12 @@ export const searchPlace = async (placeStr: string): Promise<Station[]> => {
   return res.data;
 };
 
-export const getStations = async (): Promise<Station[]> => {
-  const url = `/stations`;
-  const res = await api.get(url);
+export const getStations = async (key?: string): Promise<Station[]> => {
+  const url = `/public/stations`;
+  const res = await api.get(url, {
+    params: {
+      key,
+    },
+  });
   return res.data;
 };
