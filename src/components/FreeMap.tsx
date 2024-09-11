@@ -33,6 +33,8 @@ const defaultCenter: LatLngExpression = [35.68159350438924, 139.767199901854];
 
 const boundsAreaNum = Number(process.env.BOUNDS_AREA_NUM) || 0.01;
 
+const zoom = Number(process.env.REACT_APP_ZOOM) || 17;
+
 export const FreeMap = () => {
   const [center, setCenter] = useState<LatLngExpression>(defaultCenter);
   const [previousCenter, setPreviousCenter] =
@@ -220,7 +222,7 @@ export const FreeMap = () => {
       <div className="fixed top-0 h-full w-full">
         <MapContainer
           center={center}
-          zoom={17}
+          zoom={zoom}
           scrollWheelZoom={true}
           zoomControl={false}
         >
