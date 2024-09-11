@@ -29,7 +29,7 @@ export const SearchInput = (props: Props) => {
                 ? "shadow-lg rounded-full"
                 : "rounded-t-2xl"
             }`}
-            placeholder="Search here"
+            placeholder="駅名で検索"
             onChange={onChange}
             value={value}
           />
