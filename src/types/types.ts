@@ -66,3 +66,12 @@ export interface PlaceDetailResponse {
   formattedAddress: string;
   id: string;
 }
+
+export type FilterLabel = "Wi-Fi" | "コンセント";
+
+export interface BoundsParams {
+  lat_min: number;
+  lat_max: number;
+  lng_min: number;
+  lng_max: number;
+}

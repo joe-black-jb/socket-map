@@ -1,4 +1,9 @@
-import { Place, PlaceDetailResponse, Station } from "../types/types";
+import {
+  BoundsParams,
+  Place,
+  PlaceDetailResponse,
+  Station,
+} from "../types/types";
 import api from "./axiosConfig";
 import { googleMapApiKey } from "./config/config";
 
@@ -39,6 +44,16 @@ export const getStations = async (key?: string): Promise<Station[]> => {
     params: {
       key,
     },
+  });
+  return res.data;
+};
+
+export const getPlacesWithinBounds = async (
+  params: BoundsParams
+): Promise<Place[]> => {
+  const url = `/private/places-bounds`;
+  const res = await api.get(url, {
+    params,
   });
   return res.data;
 };
