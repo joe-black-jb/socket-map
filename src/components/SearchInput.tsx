@@ -1,6 +1,5 @@
 import { Input } from "@headlessui/react";
 import { Station } from "../types/types";
-import Header from "./Header";
 import Header2 from "./Header2";
 
 interface Props {
@@ -13,8 +12,7 @@ interface Props {
 }
 
 export const SearchInput = (props: Props) => {
-  const { value, suggestions, onClear, onChange, onClick, onClickSuggestion } =
-    props;
+  const { value, suggestions, onClear, onChange, onClickSuggestion } = props;
 
   return (
     // <div className={`absolute w-full ${suggestions.length > 0 && "z-30"}`}>

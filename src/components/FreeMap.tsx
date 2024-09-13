@@ -175,7 +175,7 @@ export const FreeMap = () => {
       return;
     }
     //  Wi-Fi フィルターなし && コンセントフィルターなし
-    const visiblePlaces = wifiPlaces.filter((place) =>
+    const visiblePlaces = places.filter((place) =>
       bounds.contains([place.latitude, place.longitude])
     );
     setFilteredPlaces(visiblePlaces);
@@ -356,7 +356,7 @@ export const FreeMap = () => {
           onClick={handleClickFilter}
         />
       </div>
-      <div className="fixed top-0 h-full w-full">
+      <div className="fixed top-0 h-full w-full sm:w-1/2 sm:right-0">
         <MapContainer
           center={center}
           zoom={zoom}

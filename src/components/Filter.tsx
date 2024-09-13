@@ -1,8 +1,4 @@
-import { Input } from "@headlessui/react";
-import { FilterLabel, Station } from "../types/types";
-import Header from "./Header";
-import Header2 from "./Header2";
-import { Icon } from "semantic-ui-react";
+import { FilterLabel } from "../types/types";
 
 interface Props {
   isClicked: boolean;
