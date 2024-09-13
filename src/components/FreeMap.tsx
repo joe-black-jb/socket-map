@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { BoundsParams, FilterLabel, Place, Station } from "../types/types";
-import L, { LatLngBounds, LatLngExpression, LatLngTuple } from "leaflet";
+import L, { LatLngBounds, LatLngExpression, LatLngLiteral } from "leaflet";
 import { useEffect, useState } from "react";
 import { siCoffeescript, siMcdonalds, siStarbucks } from "simple-icons";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -34,22 +34,42 @@ const ChangeMapView = ({ center }: { center: LatLngExpression }) => {
 };
 
 // 東京駅
-const defaultCenter: LatLngExpression = [35.68159350438924, 139.767199901854];
+const defaultCenter: LatLngLiteral = {
+  lat: 35.68159350438924,
+  lng: 139.767199901854,
+};
 
-const boundsAreaNum = Number(process.env.BOUNDS_AREA_NUM) || 0.01;
+const defaultZoom = Number(process.env.REACT_APP_ZOOM) || 17;
 
-const zoom = Number(process.env.REACT_APP_ZOOM) || 17;
+interface ZoomMap {
+  [key: number]: number;
+}
+// zoom値: ± どこまで周りの場所を取得するかを示す値
+const zoomSurroundMap: ZoomMap = {
+  16: 0.01,
+  15: 0.02,
+  14: 0.03,
+  13: 0.04,
+  12: 0.05,
+  11: 0.06,
+  10: 0.07,
+};
 
 export const FreeMap = () => {
-  const [center, setCenter] = useState<LatLngExpression>(defaultCenter);
+  const [center, setCenter] = useState<LatLngLiteral>(defaultCenter);
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
+  const [wifiPlaces, setWifiPlaces] = useState<Place[]>([]);
+  const [socketPlaces, setSocketPlaces] = useState<Place[]>([]);
+  const [wifiSocketPlaces, setWifiSocketPlaces] = useState<Place[]>([]);
   const [stations, setStations] = useState<Station[]>([]);
   const [filteredStations, setFilteredStations] = useState<Station[]>([]);
   const [placeStr, setPlaceStr] = useState<string>("");
-  const [bounds, setBounds] = useState<number[]>([]);
   const [wifiFilter, setWifiFilter] = useState<boolean>(false);
   const [socketFilter, setSocketFilter] = useState<boolean>(false);
+  const [zoom, setZoom] = useState<number>(defaultZoom);
+
+  const boundsAreaNum = zoomSurroundMap[zoom] || 0.01;
 
   useEffect(() => {
     getCurrentLocation();
@@ -68,11 +88,11 @@ export const FreeMap = () => {
   }, [places]);
 
   useEffect(() => {
-    filterWifiPlaces();
+    onClickFilter();
   }, [wifiFilter]);
 
   useEffect(() => {
-    filterSocketPlaces();
+    onClickFilter();
   }, [socketFilter]);
 
   const getCurrentLocation = async () => {
@@ -91,7 +111,7 @@ export const FreeMap = () => {
           lng_min: lng - boundsAreaNum,
           lng_max: lng + boundsAreaNum,
         };
-
+        // 初回ロード時はAPIで取得する
         const placesWithinBounds = await getPlacesWithinBounds(boundsParams);
         if (placesWithinBounds.length) {
           setFilteredPlaces(placesWithinBounds);
@@ -101,9 +121,7 @@ export const FreeMap = () => {
   };
 
   const setSurroundPlaces = () => {
-    const c = center as LatLngTuple;
-    const lat = c[0];
-    const lng = c[1];
+    const { lat, lng } = center;
 
     if (lat && lng) {
       const bounds = L.latLngBounds(
@@ -115,43 +133,53 @@ export const FreeMap = () => {
   };
 
   const fetchPlaces = async (key?: string) => {
+    // places 全件取得
     const places = await getPlaces(key);
     setPlaces(places);
+
+    // フィルターの条件ごとに分けて places をセット
+    const wifiPlaces = places.filter((place) => place.wifi === 1);
+    setWifiPlaces(wifiPlaces);
+
+    const socketPlaces = places.filter((place) => place.socket === 1);
+    setSocketPlaces(socketPlaces);
+
+    const wifiSocketPlaces = wifiPlaces.filter((place) => place.socket === 1);
+    setWifiSocketPlaces(wifiSocketPlaces);
   };
 
   // 地図の表示範囲内にある places をフィルタリング
   const updateVisibleMarkers = (bounds: LatLngBounds) => {
-    const visiblePlaces = places.filter((place) =>
+    // Wi-Fi フィルターあり && コンセントフィルターなし
+    if (wifiFilter && !socketFilter) {
+      const visiblePlaces = wifiPlaces.filter((place) =>
+        bounds.contains([place.latitude, place.longitude])
+      );
+      setFilteredPlaces(visiblePlaces);
+      return;
+    }
+    // Wi-Fi フィルターなし && コンセントフィルターあり
+    if (!wifiFilter && socketFilter) {
+      const visiblePlaces = socketPlaces.filter((place) =>
+        bounds.contains([place.latitude, place.longitude])
+      );
+      setFilteredPlaces(visiblePlaces);
+      return;
+    }
+    // Wi-Fi フィルターあり && コンセントフィルターあり
+    if (wifiFilter && socketFilter) {
+      const visiblePlaces = wifiSocketPlaces.filter((place) =>
+        bounds.contains([place.latitude, place.longitude])
+      );
+      setFilteredPlaces(visiblePlaces);
+      return;
+    }
+    //  Wi-Fi フィルターなし && コンセントフィルターなし
+    const visiblePlaces = wifiPlaces.filter((place) =>
       bounds.contains([place.latitude, place.longitude])
     );
-    let wifiPlaces: Place[] = [];
-    if (wifiFilter) {
-      wifiPlaces = visiblePlaces.filter((place) => place.wifi === 1);
-    }
-    let socketPlaces: Place[] = [];
-    if (socketFilter) {
-      if (wifiFilter) {
-        // socket + wifi => wifi からさらに絞る
-        socketPlaces = wifiPlaces.filter((place) => place.socket === 1);
-      } else {
-        // socket => socket のみ絞る
-        socketPlaces = visiblePlaces.filter((place) => place.socket === 1);
-      }
-    }
-    // update state
-    if (wifiFilter && !socketFilter) {
-      setFilteredPlaces(wifiPlaces);
-      return;
-    }
-    if (!wifiFilter && socketFilter) {
-      setFilteredPlaces(socketPlaces);
-      return;
-    }
-    if (wifiFilter && socketFilter) {
-      setFilteredPlaces(socketPlaces);
-      return;
-    }
     setFilteredPlaces(visiblePlaces);
+    return;
   };
 
   // 地図の移動やズームが完了したときに範囲を取得する
@@ -160,143 +188,45 @@ export const FreeMap = () => {
     useMapEvent("moveend", () => {
       const bounds = map.getBounds(); // 現在の表示範囲を取得
       updateVisibleMarkers(bounds); // 表示範囲内のマーカーを更新
-      const latMin = bounds.getSouthWest().lat;
-      const lngMin = bounds.getSouthWest().lng;
-      const latMax = bounds.getNorthEast().lat;
-      const lngMax = bounds.getNorthEast().lng;
 
-      setBounds([latMin, latMax, lngMin, lngMax]);
+      const center = map.getCenter();
+      setCenter({
+        lat: center.lat,
+        lng: center.lng,
+      });
     });
     return null;
   };
 
   // Wi-Fiフィルターの ON/OFF による絞り込み
-  const filterWifiPlaces = async () => {
-    if (wifiFilter) {
-      if (socketFilter && bounds.length) {
-        const boundsParams: BoundsParams = {
-          lat_min: bounds[0],
-          lat_max: bounds[1],
-          lng_min: bounds[2],
-          lng_max: bounds[3],
-        };
-        const boundsPlaces = await getPlacesWithinBounds(boundsParams);
-        if (boundsPlaces.length) {
-          const bothSocketAndWifiPlaces = boundsPlaces.filter((place) => {
-            if (place.socket === 1 && place.wifi === 1) {
-              return true;
-            }
-            return false;
-          });
-          setFilteredPlaces(bothSocketAndWifiPlaces);
-          return;
-        }
-      }
-      const wifiPlaces = filteredPlaces.filter((place) => place.wifi === 1);
-      setFilteredPlaces(wifiPlaces);
-    } else {
-      // wifi: ON => OFF の場合
-      if (bounds.length) {
-        const boundsParams: BoundsParams = {
-          lat_min: bounds[0],
-          lat_max: bounds[1],
-          lng_min: bounds[2],
-          lng_max: bounds[3],
-        };
-        const boundsPlaces = await getPlacesWithinBounds(boundsParams);
+  const onClickFilter = async () => {
+    // 現在地をもとに bounds を作成
+    const { lat, lng } = center;
+    let bounds: L.LatLngBounds;
 
-        if (socketFilter) {
-          /*
-            wifi フィルターなし && socket フィルターあり
-            => socket がある (1) の場所に絞る (wifi はあってもなくても OK)
-          */
-          if (boundsPlaces.length) {
-            const socketWithoutWifiPlaces = boundsPlaces.filter((place) => {
-              if (place.socket === 1) {
-                return true;
-              }
-              return false;
-            });
-            setFilteredPlaces(socketWithoutWifiPlaces);
-          }
-        } else {
-          /*
-            wifi フィルターなし && socket フィルターなし
-            => エリア内の場所全てをセット
-          */
-          if (boundsPlaces.length) {
-            setFilteredPlaces(boundsPlaces);
-          }
-        }
-      }
+    if (lat && lng) {
+      bounds = L.latLngBounds(
+        [lat - boundsAreaNum, lng - boundsAreaNum],
+        [lat + boundsAreaNum, lng + boundsAreaNum]
+      );
+      updateVisibleMarkers(bounds);
     }
   };
-  // コンセントフィルターの ON/OFF による絞り込み
-  const filterSocketPlaces = async () => {
-    if (socketFilter) {
-      if (wifiFilter && bounds.length) {
-        const boundsParams: BoundsParams = {
-          lat_min: bounds[0],
-          lat_max: bounds[1],
-          lng_min: bounds[2],
-          lng_max: bounds[3],
-        };
-        const boundsPlaces = await getPlacesWithinBounds(boundsParams);
-        if (boundsPlaces.length) {
-          console.log("socket あり && wifi あり");
-          const bothSocketAndWifiPlaces = boundsPlaces.filter((place) => {
-            if (place.socket === 1 && place.wifi === 1) {
-              return true;
-            }
-            return false;
-          });
-          setFilteredPlaces(bothSocketAndWifiPlaces);
-          return;
-        }
-      }
-      const socketPlaces = filteredPlaces.filter((place) => place.socket === 1);
-      setFilteredPlaces(socketPlaces);
-    } else {
-      // socket: ON => OFF の場合
-      if (bounds.length) {
-        const boundsParams: BoundsParams = {
-          lat_min: bounds[0],
-          lat_max: bounds[1],
-          lng_min: bounds[2],
-          lng_max: bounds[3],
-        };
-        const boundsPlaces = await getPlacesWithinBounds(boundsParams);
-        if (wifiFilter) {
-          /*
-            wifi フィルターあり && socket フィルターなし
-            => wifi がある (1) の場所に絞る (socket はあってもなくても OK)
-          */
-          if (boundsPlaces.length) {
-            const socketWithoutWifiPlaces = boundsPlaces.filter((place) => {
-              if (place.wifi === 1) {
-                return true;
-              }
-              return false;
-            });
-            setFilteredPlaces(socketWithoutWifiPlaces);
-          }
-        } else {
-          /*
-            wifi フィルターなし && socket フィルターなし
-            => エリア内の場所全てをセット
-          */
-          if (boundsPlaces.length) {
-            setFilteredPlaces(boundsPlaces);
-          }
-        }
-      }
-    }
+
+  const ZoomListener = () => {
+    const map = useMap();
+    useMapEvent("zoom", () => {
+      const zoom = map.getZoom(); // 現在の表示範囲を取得
+      setZoom(zoom);
+    });
+    return null;
   };
 
   const MapEventListener = () => {
     return (
       <>
         <MapMoveListener />
+        <ZoomListener />
       </>
     );
   };
@@ -334,7 +264,10 @@ export const FreeMap = () => {
   const onClickSuggestion = (suggestion: Station) => {
     setPlaceStr(suggestion.name);
     setFilteredStations([]);
-    setCenter([suggestion.latitude, suggestion.longitude]);
+    setCenter({
+      lat: suggestion.latitude,
+      lng: suggestion.longitude,
+    });
   };
 
   const getIcon = (shopName: string): L.Icon | L.DivIcon => {
