@@ -16,13 +16,14 @@ export const SearchInput = (props: Props) => {
 
   return (
     // <div className={`absolute w-full ${suggestions.length > 0 && "z-30"}`}>
-    <div className={`absolute mt-4 w-full h-10 z-50 top-0`}>
+    <div className={`absolute mt-4 w-full h-10 z-[1000] top-0`}>
       <div className="flex justify-center">
         <div className="relative w-2/3 md:w-96 h-10 z-50">
           {/* <Header /> */}
-          <Header2 />
+          {/* <Header2 /> */}
+          {/* Header2: あり => pl-14, なし => pl-8*/}
           <Input
-            className={`relative w-full h-12 justify-self-center pl-14 pr-10 py-2 autofill:shadow-[inset_0_0_0px_1000px_white] focus:outline-none focus:bg-white ${
+            className={`relative w-full h-12 justify-self-center pl-8 pr-10 py-2 autofill:shadow-[inset_0_0_0px_1000px_white] focus:outline-none focus:bg-white ${
               suggestions.length === 0
                 ? "shadow-lg rounded-full"
                 : "rounded-t-2xl"

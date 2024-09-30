@@ -46,7 +46,7 @@ export default function Header2(props: Props) {
   };
 
   return (
-    <div className="bg-white absolute top-2 left-2 z-40">
+    <div className="bg-white absolute top-2 left-2 z-[500]">
       {confirmModalShow && (
         <ConfirmModal
           isOpen={true}

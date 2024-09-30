@@ -20,8 +20,7 @@ import {
   searchPlace,
 } from "../api/apis";
 import { debounce } from "lodash";
-import { SearchInput } from "./SearchInput";
-import { Filter } from "./Filter";
+import { SearchInput2 } from "./SearchInput2";
 
 // Mapの中心を動的に変更するためのコンポーネント
 const ChangeMapView = ({ center }: { center: LatLngExpression }) => {
@@ -335,89 +334,86 @@ export const FreeMap = () => {
   };
 
   return (
-    <div className="h-full relative flex justify-center">
-      <SearchInput
-        value={placeStr}
-        suggestions={filteredStations}
-        onChange={onValueChange}
-        onClear={onClear}
-        onClick={onClickSearch}
-        onClickSuggestion={onClickSuggestion}
-      />
-      <div className="flex justify-center w-80 absolute h-20 z-40 top-0">
-        <Filter
-          isClicked={wifiFilter}
-          label="Wi-Fi"
-          onClick={handleClickFilter}
-        />
-        <Filter
-          isClicked={socketFilter}
-          label={"コンセント"}
-          onClick={handleClickFilter}
-        />
-      </div>
-      <div className="fixed top-0 h-full w-full sm:w-1/2 sm:right-0">
-        <MapContainer
-          center={center}
-          zoom={zoom}
-          scrollWheelZoom={true}
-          zoomControl={false}
-          whenReady={setSurroundPlaces}
-        >
-          <ZoomControl position="bottomright" />
-          <ChangeMapView center={center} />
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    <>
+      {/* <div className="hidden sm:block fixed top-0 h-full w-full sm:w-1/2 sm:left-0">
+        Hello
+      </div> */}
+      {/* レスポンシブ => sm:w-1/2 を追加する */}
+      <div className="fixed top-0 h-full w-full sm:right-0">
+        <div className="h-full relative flex justify-center z-10">
+          <SearchInput2
+            value={placeStr}
+            suggestions={filteredStations}
+            wifiFilter={wifiFilter}
+            socketFilter={socketFilter}
+            handleClickFilter={handleClickFilter}
+            onChange={onValueChange}
+            onClear={onClear}
+            onClick={onClickSearch}
+            onClickSuggestion={onClickSuggestion}
           />
-          {filteredPlaces.map((place) => (
-            <Marker
-              icon={getIcon(place.name)}
-              // icon={getIcon()}
-              key={place.id}
-              position={[place.latitude, place.longitude]}
-            >
-              <Popup>
-                <div className="font-bold mb-2">{place.name}</div>
-                <div>{place.address}</div>
-                <div className="flex mt-2">
-                  {place.wifi === 1 && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z"
-                      />
-                    </svg>
-                  )}
-                  {place.socket === 1 && (
-                    <div className="ml-1 pt-[2px]">
-                      {/* https://icons.getbootstrap.jp/ */}
+          <MapContainer
+            center={center}
+            zoom={zoom}
+            scrollWheelZoom={true}
+            zoomControl={false}
+            whenReady={setSurroundPlaces}
+          >
+            <ZoomControl position="bottomright" />
+            <ChangeMapView center={center} />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {filteredPlaces.map((place) => (
+              <Marker
+                icon={getIcon(place.name)}
+                // icon={getIcon()}
+                key={place.id}
+                position={[place.latitude, place.longitude]}
+              >
+                <Popup>
+                  <div className="font-bold mb-2">{place.name}</div>
+                  <div>{place.address}</div>
+                  <div className="flex mt-2">
+                    {place.wifi === 1 && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6"
                       >
-                        <path d="M6 0a.5.5 0 0 1 .5.5V3h3V.5a.5.5 0 0 1 1 0V3h1a.5.5 0 0 1 .5.5v3A3.5 3.5 0 0 1 8.5 10c-.002.434-.01.845-.04 1.22-.041.514-.126 1.003-.317 1.424a2.083 2.083 0 0 1-.97 1.028C6.725 13.9 6.169 14 5.5 14c-.998 0-1.61.33-1.974.718A1.922 1.922 0 0 0 3 16H2c0-.616.232-1.367.797-1.968C3.374 13.42 4.261 13 5.5 13c.581 0 .962-.088 1.218-.219.241-.123.4-.3.514-.55.121-.266.193-.621.23-1.09.027-.34.035-.718.037-1.141A3.5 3.5 0 0 1 4 6.5v-3a.5.5 0 0 1 .5-.5h1V.5A.5.5 0 0 1 6 0z" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z"
+                        />
                       </svg>
-                    </div>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-          <MapEventListener />
-        </MapContainer>
+                    )}
+                    {place.socket === 1 && (
+                      <div className="ml-1 pt-[2px]">
+                        {/* https://icons.getbootstrap.jp/ */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M6 0a.5.5 0 0 1 .5.5V3h3V.5a.5.5 0 0 1 1 0V3h1a.5.5 0 0 1 .5.5v3A3.5 3.5 0 0 1 8.5 10c-.002.434-.01.845-.04 1.22-.041.514-.126 1.003-.317 1.424a2.083 2.083 0 0 1-.97 1.028C6.725 13.9 6.169 14 5.5 14c-.998 0-1.61.33-1.974.718A1.922 1.922 0 0 0 3 16H2c0-.616.232-1.367.797-1.968C3.374 13.42 4.261 13 5.5 13c.581 0 .962-.088 1.218-.219.241-.123.4-.3.514-.55.121-.266.193-.621.23-1.09.027-.34.035-.718.037-1.141A3.5 3.5 0 0 1 4 6.5v-3a.5.5 0 0 1 .5-.5h1V.5A.5.5 0 0 1 6 0z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+            <MapEventListener />
+          </MapContainer>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

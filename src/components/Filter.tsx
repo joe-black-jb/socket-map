@@ -13,7 +13,7 @@ export const Filter = (props: Props) => {
     <div key={label}>
       <button
         onClick={() => onClick(label)}
-        className={`flex justify-center mt-[65px] ml-6 h-8 z-40 top-0 rounded-t-2xl rounded-b-2xl transition duration-100 ${
+        className={`flex justify-center mt-[50px] ml-6 h-8 z-40 top-0 rounded-t-2xl rounded-b-2xl transition duration-100 ${
           isClicked ? "bg-yellow-200" : "bg-white"
         }`}
       >
