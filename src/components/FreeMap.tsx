@@ -68,7 +68,8 @@ export const FreeMap = () => {
   const [socketFilter, setSocketFilter] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(defaultZoom);
 
-  const boundsAreaNum = zoomSurroundMap[zoom] || 0.01;
+  // const boundsAreaNum = zoomSurroundMap[zoom] || 0.01;
+  const boundsAreaNum = 0.01;
 
   useEffect(() => {
     getCurrentLocation();
@@ -185,8 +186,8 @@ export const FreeMap = () => {
   const MapMoveListener = () => {
     const map = useMap();
     useMapEvent("moveend", () => {
-      const bounds = map.getBounds(); // 現在の表示範囲を取得
-      updateVisibleMarkers(bounds); // 表示範囲内のマーカーを更新
+      // const bounds = map.getBounds(); // 現在の表示範囲を取得
+      // updateVisibleMarkers(bounds); // 表示範囲内のマーカーを更新
 
       const center = map.getCenter();
       setCenter({
