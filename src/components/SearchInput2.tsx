@@ -60,7 +60,7 @@ export const SearchInput2 = (props: Props) => {
         {suggestions.length > 0 && (
           <div
             className={
-              "mx-auto w-2/3 md:w-96  max-h-96 overflow-auto rounded-b-2xl"
+              "mx-auto w-80 sm:w-96  max-h-96 overflow-auto rounded-b-2xl"
             }
           >
             <div className="rounded-b-xl">
