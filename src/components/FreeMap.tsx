@@ -303,11 +303,7 @@ export const FreeMap = () => {
         iconAnchor: [15, 0],
         className: "starbucks-marker-icon",
       });
-    } else if (
-      shopName.indexOf("コーヒー") > -1 ||
-      shopName.indexOf("珈琲") > -1 ||
-      shopName.indexOf("カフェ") > -1
-    ) {
+    } else {
       const coffeeIconHtml = renderToStaticMarkup(
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d={siCoffeescript.path} />
@@ -321,9 +317,6 @@ export const FreeMap = () => {
         className: "coffee-marker-icon",
       });
     }
-    return L.icon({
-      iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
-    });
   };
 
   const handleClickFilter = (label: FilterLabel) => {
